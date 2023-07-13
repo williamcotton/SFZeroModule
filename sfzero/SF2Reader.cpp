@@ -12,7 +12,7 @@
 
 sfzero::SF2Reader::SF2Reader(sfzero::SF2Sound *soundIn, const juce::File &fileIn) : sound_(soundIn)
 {
-  file_ = fileIn.createInputStream();
+  file_ = fileIn.createInputStream().release();
 }
 
 sfzero::SF2Reader::~SF2Reader() { delete file_; }
@@ -222,7 +222,7 @@ juce::AudioSampleBuffer *sfzero::SF2Reader::readSamples(double *progressVar, juc
   }
 
   // Allocate the AudioSampleBuffer.
-  int numSamples = chunk.size / sizeof(short);
+  int numSamples = int (chunk.size / sizeof(short));
   juce::AudioSampleBuffer *sampleBuffer = new juce::AudioSampleBuffer(1, numSamples);
 
   // Read and convert.
